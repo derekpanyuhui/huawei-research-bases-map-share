@@ -726,6 +726,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
       box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
       pointer-events: none;
     }
+
+    #map { background: #d9e8f2; }
+    .leaflet-container { background: #d9e8f2; }
+    .country-label {
+      color: #334155;
+      font-size: 11px;
+      font-weight: 650;
+      line-height: 1;
+      white-space: nowrap;
+      pointer-events: none;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.95), 1px 0 0 rgba(255,255,255,0.85), -1px 0 0 rgba(255,255,255,0.85), 0 -1px 0 rgba(255,255,255,0.85);
+    }
+    .country-label.major { font-size: 12px; color: #1f2937; }
   </style>
 </head>
 <body>
@@ -944,9 +957,47 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
     const map = L.map('map', { zoomControl: true }).setView([28, 25], 2);
     L.geoJSON(worldGeoJson, {
-      style: { color: '#aeb7c1', weight: 1, fillColor: '#edf2ea', fillOpacity: 1 },
+      style: {
+        color: '#7f8fa3',
+        weight: 1.15,
+        opacity: 0.9,
+        fillColor: '#f4f0df',
+        fillOpacity: 1
+      },
       interactive: false
     }).addTo(map);
+
+    map.createPane('labelPane');
+    map.getPane('labelPane').style.zIndex = 350;
+    map.getPane('labelPane').style.pointerEvents = 'none';
+
+    const baseLabels = [
+      { name: '中国', lat: 35.8, lng: 103.8, major: true },
+      { name: '欧洲', lat: 52.5, lng: 13.0, major: true },
+      { name: '北美', lat: 49.5, lng: -101.0, major: true },
+      { name: '加拿大', lat: 57.5, lng: -106.0 },
+      { name: '美国', lat: 38.5, lng: -97.0 },
+      { name: '印度', lat: 22.5, lng: 78.5 },
+      { name: '日本', lat: 38.5, lng: 138.0 },
+      { name: '东南亚', lat: 10.5, lng: 106.0 },
+      { name: '马来西亚', lat: 4.2, lng: 102.0 },
+      { name: '土耳其', lat: 39.0, lng: 35.0 }
+    ];
+
+    for (const label of baseLabels) {
+      L.marker([label.lat, label.lng], {
+        pane: 'labelPane',
+        interactive: false,
+        keyboard: false,
+        icon: L.divIcon({
+          className: '',
+          html: `<span class="country-label${label.major ? ' major' : ''}">${label.name}</span>`,
+          iconSize: [80, 16],
+          iconAnchor: [40, 8]
+        })
+      }).addTo(map);
+    }
+
 
     const categoryLayers = {};
     for (const cat of categoryOrder) {
