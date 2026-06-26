@@ -947,10 +947,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
     const map = L.map('map', { zoomControl: true }).setView([28, 25], 2);
     let loadedBaseTiles = 0;
-    const standardBaseMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
+    const standardBaseMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 10,
+      maxNativeZoom: 6,
       detectRetina: true,
-      attribution: '&copy; OpenStreetMap contributors'
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
     }).on('tileload', () => {
       loadedBaseTiles += 1;
     }).addTo(map);
